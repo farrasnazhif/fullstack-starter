@@ -1,0 +1,35 @@
+import type { Metadata } from "next";
+import { cookies } from "next/headers";
+import { getTheme } from "@/lib/theme";
+import { QueryProvider } from "@/providers/query-provider";
+import { ThemeProvider } from "@/providers/theme-provider";
+import "./globals.css";
+
+export const metadata: Metadata = {
+  title: {
+    default: "Fullstack Starter",
+    template: "%s · Fullstack Starter",
+  },
+  description:
+    "A small, complete foundation for your next hackathon. Next.js, Supabase, and a UI you own.",
+};
+
+export default async function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  const theme = getTheme((await cookies()).get("theme")?.value);
+  return (
+    <html lang="en" data-theme={theme}>
+      <body>
+        <a href="#main-content" className="skip-link">
+          Skip to content
+        </a>
+        <ThemeProvider initialTheme={theme}>
+          <QueryProvider>{children}</QueryProvider>
+        </ThemeProvider>
+      </body>
+    </html>
+  );
+}
